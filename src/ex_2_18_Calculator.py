@@ -36,47 +36,62 @@
 class Calculator:
     @staticmethod
     def run() -> None:
-        _o = Calculator.getInput()
+        _operands = Calculator.getInput()
+        _out = Calculator.calculate(_operands)
+        Calculator.Print(_out)
+
+    @staticmethod
+    def Print(out: str) -> None:
+        print(out)
 
     @staticmethod
     def getInput() -> list:
-        _n1 = float(input())
-        _n2 = float(input())
+        _n1 = str(input())
+        _n2 = str(input())
         _operation = str(input().rstrip())
         _out = [_n1, _n2, _operation]
         return _out
 
     @staticmethod
-    def calculate(operands: list) -> str:
+    def calculate1(operands: list) -> str:
         """
         Supported operations: +, -, /, *, mod, pow, div
         :param operands: list of operands
         :return: string
         """
-        _out: str = None
-        if operands[2] == 'mod':
-            _out = Calculator.mod(int(operands[0]), int(operands[1]))
+        _out: str = str()
+        _left: float = operands[0]
+        _right: float = operands[1]
+        if operands[2] == '%':
+            _out = Calculator.mod(int(_left), int(_right))
         elif operands[2] == '+':
-            _out = Calculator.sum(operands[0], operands[1])
+            _out = Calculator.sum(float(_left), float(_right))
         elif operands[2] == '-':
-            _out = Calculator.sub(operands[0], operands[1])
+            _out = Calculator.sub(float(_left), float(_right))
         elif operands[2] == '/':
-            _out = Calculator.division(operands[0], operands[1])
+            _out = Calculator.division(float(_left), float(_right))
         elif operands[2] == '*':
-            _out = Calculator.mul(operands[0], operands[1])
-        elif operands[2] == 'pow':
-            _out = Calculator.pow(operands[0], operands[1])
-        elif operands[2] == 'div':
-            _out = Calculator.div(int(operands[0]), int(operands[1]))
+            _out = Calculator.mul(float(_left), float(_right))
+        elif operands[2] == '**':
+            _out = Calculator.pow(float(_left), float(_right))
+        elif operands[2] == '//':
+            _out = Calculator.div(int(_left), int(_right))
         else:
             _out = 'Wrong input'
         return _out
 
     @staticmethod
+    def calculate(operands: list) -> str:
+        _template:str='{left}{sign}{right}'
+        _evl = _template.format(left=operands[0],sign = operands[2],right=operands[1])
+        _res = eval(_evl)
+        return str(_res)
+
+    @staticmethod
     def mod(o1: int, o2: int) -> str:
-        if o2 == 0:
+        if int(o2) == 0:
             return 'Division by 0!'
-        return str(o1 % o2)
+        return str(int(o1) % int(o2))
 
     @staticmethod
     def sum(o1: float, o2: float) -> str:
@@ -88,6 +103,8 @@ class Calculator:
 
     @staticmethod
     def division(o1: float, o2: float) -> str:
+        if float(o2) == 0:
+            return 'Division by 0!'
         return str(o1 / o2)
 
     @staticmethod
