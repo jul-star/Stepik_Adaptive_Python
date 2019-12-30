@@ -46,79 +46,32 @@ class Calculator:
 
     @staticmethod
     def getInput() -> list:
-        _n1 = str(input())
-        _n2 = str(input())
-        _operation = str(input().rstrip())
+        _n1 = str(input().strip())
+        _n2 = str(input().strip())
+        _operation = str(input().strip())
         _out = [_n1, _n2, _operation]
         return _out
 
     @staticmethod
-    def calculate1(operands: list) -> str:
-        """
-        Supported operations: +, -, /, *, mod, pow, div
-        :param operands: list of operands
-        :return: string
-        """
-        _out: str = str()
-        _left: float = operands[0]
-        _right: float = operands[1]
-        if operands[2] == '%':
-            _out = Calculator.mod(int(_left), int(_right))
-        elif operands[2] == '+':
-            _out = Calculator.sum(float(_left), float(_right))
-        elif operands[2] == '-':
-            _out = Calculator.sub(float(_left), float(_right))
-        elif operands[2] == '/':
-            _out = Calculator.division(float(_left), float(_right))
-        elif operands[2] == '*':
-            _out = Calculator.mul(float(_left), float(_right))
-        elif operands[2] == '**':
-            _out = Calculator.pow(float(_left), float(_right))
-        elif operands[2] == '//':
-            _out = Calculator.div(int(_left), int(_right))
-        else:
-            _out = 'Wrong input'
-        return _out
-
-    @staticmethod
     def calculate(operands: list) -> str:
-        _template:str='{left}{sign}{right}'
-        _evl = _template.format(left=operands[0],sign = operands[2],right=operands[1])
-        _res = eval(_evl)
-        return str(_res)
+        _template: str = '({left}) {sign} ({right})'
+        (_left, _right, _sign) = (float(operands[0]), float(operands[1]), str(operands[2]))
+        if _sign in ['%', '//']:
+            _left = int(_left)
+            _right = int(_right)
+        if _sign == 'mod':
+            _sign = '%'
+        if _sign == 'pow':
+            _sign = '**'
+        if _sign == 'div':
+            _sign = '//'
 
-    @staticmethod
-    def mod(o1: int, o2: int) -> str:
-        if int(o2) == 0:
+        _evl = _template.format(left=_left, sign=_sign, right=_right)
+        try:
+            return str(eval(_evl))
+        except ZeroDivisionError:
             return 'Division by 0!'
-        return str(int(o1) % int(o2))
-
-    @staticmethod
-    def sum(o1: float, o2: float) -> str:
-        return str(o1 + o2)
-
-    @staticmethod
-    def sub(o1: float, o2: float) -> str:
-        return str(o1 - o2)
-
-    @staticmethod
-    def division(o1: float, o2: float) -> str:
-        if float(o2) == 0:
-            return 'Division by 0!'
-        return str(o1 / o2)
-
-    @staticmethod
-    def mul(o1: float, o2: float) -> str:
-        return str(o1 * o2)
-
-    @staticmethod
-    def pow(o1: float, o2: float) -> str:
-        return str(o1 ** o2)
-
-    @staticmethod
-    def div(o1: int, o2: int) -> str:
-        return str(o1 // o2)
 
 
 if __name__ == "__main__":
-    pass
+    Calculator.run()
